@@ -30,8 +30,6 @@ test_h2v4(){
 	/nfs/bin/testbench_hevc_v8 -i $IN_YUV -b $MAX_FRAME -L 123 --bitPerSecond 360000000  --tolMovingBitRate 1  -U 1 -u 1  -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 --gopSize 1 --monitorFrames 15 -o /nfs/h2v4/bps36000k.hevc
 	/nfs/bin/testbench_hevc_v8 -i $IN_YUV -b $MAX_FRAME -L 123 --bitPerSecond 400000000  --tolMovingBitRate 1  -U 1 -u 1  -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 --gopSize 1 --monitorFrames 15 -o /nfs/h2v4/bps40000k.hevc
 
-
-
 }
 test_h1v6(){
 	echo "h1v6"
