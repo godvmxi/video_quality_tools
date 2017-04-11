@@ -2,23 +2,25 @@
 H2V8=/nfs/bin/testbench_hevc_v8
 H2V1=/nfs/bin/testbench_hevc_v1
 H1V6=/nfs/bin/testbench_h1v6_264
-IN_YUV=/nfs/yuv/nv12_1920p.yuv
-MAX_FRAME=280
-#3s
+IN_YUV=/nfs/yuv/nv12_1920p_1000.yuv
+MAX_FRAME=10
+#18
 encode_h2v4(){
 	bps=$1
 	kbps=`expr $bps / 1000`
 	out_file="/nfs/h2v4/bps${kbps}k.hevc"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
-	$H2V8 -i $IN_YUV -a 1 -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps  --tolMovingBitRate 2 --picSkip 0 -U 1 -u 1  -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 --gopSize 1 --monitorFrames 15 -o $out_file
+	$H2V8 -a  1 -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps  \
+	--tolMovingBitRate 2 --picSkip 0 -U 1 -u 1  -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 --gopSize 1 --monitorFrames 15  -o $out_file -i $IN_YUV 
 }
 encode_h2v1(){
 	bps=$1
 	kbps=`expr $bps / 1000`
-	bps=`expr $bps \* 2`
-	out_file="/nfs/h2v1/bps${kbps}k.hevc"
+	#bps=`expr $bps \* 2`
+	out_file="/nfs/h2v1/bps${kbps}k.hevc   $MAX_FRAME"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
-	$H2V1 -i $IN_YUV -a 1 -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps  --picSkip 0 --picRc 1   -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15  -g 15  -C 1  -o $out_file
+	$H2V1 --first_picture  1 --last_picture $MAX_FRAME  -i $IN_YUV -L 180 --intraQpDelta 0 --bitPerSecond  $bps \
+	 --picSkip 0 --picRc 1   -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15  -g 15   -o $out_file
 
 
 }
@@ -33,6 +35,7 @@ encode_h1v6(){
 }
 test_h2v4(){
 	encode_h2v4     300000
+	return
 	encode_h2v4     500000
 	encode_h2v4     800000
 	encode_h2v4    1000000
@@ -93,6 +96,7 @@ test_h1v6e(){
 test_h2v1(){
 	echo "h2v1"
 	encode_h2v1     300000
+	return
 	encode_h2v1     500000
 	encode_h2v1     800000
 	encode_h2v1    1000000
