@@ -3,7 +3,7 @@ H2V8=/nfs/bin/testbench_hevc_v8
 H2V1=/nfs/bin/testbench_hevc_v1
 H1V6=/nfs/bin/testbench_h1v6_264
 IN_YUV=/nfs/yuv/nv12_1920p_1000.yuv
-MAX_FRAME=10
+MAX_FRAME=300
 #18
 encode_h2v4(){
 	bps=$1
@@ -19,8 +19,8 @@ encode_h2v1(){
 	#bps=`expr $bps \* 2`
 	out_file="/nfs/h2v1/bps${kbps}k.hevc   $MAX_FRAME"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
-	$H2V1 --first_picture  1 --last_picture $MAX_FRAME  -i $IN_YUV -L 180 --intraQpDelta 0 --bitPerSecond  $bps \
-	 --picSkip 0 --picRc 1   -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15  -g 15   -o $out_file
+	$H2V1 -a  1 -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps \
+	 --picSkip 0 --picRc 1   -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15  -g 15   -o $out_file -i $IN_YUV 
 
 
 }
@@ -35,7 +35,6 @@ encode_h1v6(){
 }
 test_h2v4(){
 	encode_h2v4     300000
-	return
 	encode_h2v4     500000
 	encode_h2v4     800000
 	encode_h2v4    1000000
