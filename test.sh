@@ -16,7 +16,7 @@ encode_h2v1(){
 	kbps=`expr $bps / 1000`
 	out_file="/nfs/h2v1/bps${kbps}k.hevc"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
-	$H2V1 -i $IN_YUV -a 1 -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps  --tolMovingBitRate 2 --picSkip 0 -U 1 -u 1  -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 --gopSize 1 --monitorFrames 15 -o $out_file
+	$H2V1 -i $IN_YUV -a 1 -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps  --picSkip 0 -U 1 -u 1  -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15  -g 15  -C 1  -o $out_file
 
 
 }
@@ -59,12 +59,29 @@ test_h2v1(){
 	encode_h2v1     500000
 	encode_h2v1     800000
 	encode_h2v1    1000000
-
+	encode_h2v1    1500000
+	encode_h2v1    2000000
+	encode_h2v1    3000000
+	encode_h2v1    4000000
+	encode_h2v1    6000000
+	encode_h2v1    8000000
+	encode_h2v1   10000000
+	encode_h2v1   12000000
+	encode_h2v1   14000000
+	encode_h2v1   16000000
+	encode_h2v1   18000000
+	encode_h2v1   20000000
+	encode_h2v1   22000000
+	encode_h2v1   24000000
+	encode_h2v1   28000000
+	encode_h2v1   32000000
+	encode_h2v1   36000000
+	encode_h2v1   40000000
 }
 
 test2(){
-	encode_h2v4     300000
-	encode_h2v4     500000
+	encode_h2v1     300000
+	encode_h2v1     500000
 	encode_h2v4     800000
 	encode_h2v4    1000000
 	encode_h2v4    1500000
