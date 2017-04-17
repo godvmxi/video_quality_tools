@@ -12,7 +12,7 @@ encode_h2v4(){
 	out_file="/nfs/h2v4/bps${kbps}k.hevc"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
 	$H2V8 -a  1 -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps  \
-	--tolMovingBitRate 2 --picSkip 0 -U 1 -u 1  -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 --gopSize 1 --monitorFrames 15  -o $out_file -i $IN_YUV 
+	--tolMovingBitRate 2 --picSkip 0 -U 1  -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15 -j 15 -g 15   --gopSize 1 --monitorFrames 15  -o $out_file -i $IN_YUV 
 }
 encode_h2v1(){
 	bps=$1
