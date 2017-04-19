@@ -7,9 +7,11 @@ IN_YUV=/nfs/yuv/nv12_1920x1088_360.yuv
 MAX_FRAME=300
 #18
 encode_h2v4(){
+	echo "hello"
 	bps=$1
 	kbps=`expr $bps / 1000`
-	out_file="/nfs/h2v4/bps${kbps}k.hevc"
+	fsize=`printf "%08d\n" $kbps`
+	out_file="/nfs/h2v4/bps${fsize}k.hevc"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
 	$H2V8 -a  1 -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps  \
 	--tolMovingBitRate 2 --picSkip 0 -U 1  -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15 -j 15 -g 15   --gopSize 1 --monitorFrames 15  -o $out_file -i $IN_YUV 
@@ -18,7 +20,8 @@ encode_h2v1(){
 	bps=$1
 	kbps=`expr $bps / 1000`
 	#bps=`expr $bps \* 2`
-	out_file="/nfs/h2v1/bps${kbps}k.hevc   $MAX_FRAME"
+	fsize=`printf "%08d\n" $kbps`
+	out_file="/nfs/h2v1/bps${fsize}k.hevc   $MAX_FRAME"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
 	$H2V1 -a  1 -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps -f 15:1 -F 15:1\
 	 --picSkip 0 --picRc 1   -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15  -g 15   -o $out_file -i $IN_YUV 
@@ -26,18 +29,28 @@ encode_h2v1(){
 encode_h1v6(){
 	bps=$1
 	kbps=`expr $bps / 1000`
-	out_file="/nfs/h1v6/bps${kbps}k.h264"
+	fsize=`printf "%08d\n" $kbps`
+	out_file="/nfs/h1v6/bps${fsize}k.h264"
 	echo "#####################encode h1v6 -> $bps : $kbps k  -->$out_file"
 	$H1V6 -i $IN_YUV -a 1 -b $MAX_FRAME -L 40 --intraQpDelta 0 --bitPerSecond  $bps   --picSkip 0 --picRc 1 --mbRc 1  -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 -o $out_file
-
-
 }
 test_h2v4(){
 	encode_h2v4     300000
+	
 	encode_h2v4     500000
 	encode_h2v4     800000
 	encode_h2v4    1000000
 	encode_h2v4    1500000
+	encode_h2v4    2000000
+	encode_h2v4    2500000
+	encode_h2v4    3000000
+	encode_h2v4    4000000
+	encode_h2v4    5000000
+	encode_h2v4    6000000
+	encode_h2v4    7000000
+	encode_h2v4    8000000
+	encode_h2v4    9000000
+	encode_h2v4   10000000
 	return 
 	encode_h2v4    2000000
 	encode_h2v4    3000000
@@ -63,18 +76,21 @@ test_h2v4e(){
 test_h1v6(){
 	echo "h1v6"
 	encode_h1v6     300000
+	
 	encode_h1v6     500000
 	encode_h1v6     800000
 	encode_h1v6    1000000
 	encode_h1v6    1500000
-	return
 	encode_h1v6    2000000
+	encode_h1v6    2500000
 	encode_h1v6    3000000
 	encode_h1v6    4000000
+	encode_h1v6    5000000
 	encode_h1v6    6000000
+	encode_h1v6    7000000
 	encode_h1v6    8000000
+	encode_h1v6    9000000
 	encode_h1v6   10000000
-	encode_h1v6   12000000
 	return
 	encode_h1v6   14000000
 	encode_h1v6   16000000
@@ -98,14 +114,16 @@ test_h2v1(){
 	encode_h2v1     800000
 	encode_h2v1    1000000
 	encode_h2v1    1500000
-	return
 	encode_h2v1    2000000
+	encode_h2v1    2500000
 	encode_h2v1    3000000
 	encode_h2v1    4000000
+	encode_h2v1    5000000
 	encode_h2v1    6000000
+	encode_h2v1    7000000
 	encode_h2v1    8000000
+	encode_h2v1    9000000
 	encode_h2v1   10000000
-	encode_h2v1   12000000
 	return
 	encode_h2v1   14000000
 	encode_h2v1   16000000
@@ -142,3 +160,4 @@ test2(){
 	encode_h1v6   24000000
 }
 test_$1
+#encode_h2v4  $2
