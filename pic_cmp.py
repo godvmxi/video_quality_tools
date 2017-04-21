@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import os
 import sys
-PSNR="wine /nfs/dev/evalvid/psnr.exe"
-#SRC_YUV="/nfs/yuv/nv12_1080p_1000.yuv"
-SRC_YUV="/nfs/yuv/nv12_1920x1088_360.yuv"
+PSNR="/nfs/dev/evalvid/psnr"
+SRC_YUV="/nfs/yuv/nv12_1080p_1000.yuv"
+#SRC_YUV="/nfs/yuv/nv12_1920x1088_360.yuv"
 
 H1V6_DIR="/nfs/h1v6"
 H2V1_DIR="/nfs/h2v1"
@@ -149,7 +149,7 @@ if __name__ == "__main__":
         cal_h2_data(H2V4_DIR, sys.argv[2])
     elif sys.argv[1] == "all":
         cal_h1v6_data(sys.argv[2])
-        cal_h2_data(H2V1_DIR,sys.argv[2])
+        #cal_h2_data(H2V1_DIR,sys.argv[2])
         cal_h2_data(H2V4_DIR,sys.argv[2])
         pass
 
