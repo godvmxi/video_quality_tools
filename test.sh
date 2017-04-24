@@ -4,7 +4,7 @@ H2V1=/nfs/bin/testbench_hevc_v1
 H1V6=/nfs/bin/testbench_h1v6_264
 IN_YUV=/nfs/yuv/nv12_1080p_1000.yuv
 #IN_YUV=/nfs/yuv/nv12_1920x1088_360.yuv
-MAX_FRAME=300
+MAX_FRAME=100
 #18
 encode_h2v4(){
 	kbps=$1
@@ -19,7 +19,7 @@ encode_h2v1(){
 	kbps=$1
 	bps=`expr $kbps \* 1000`
 	fsize=`printf "%05d\n" $kbps`
-	out_file="/nfs/h2v1/${fsize}k.h265   $MAX_FRAME"
+	out_file="/nfs/h2v1/${fsize}k.h265"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
 	$H2V1 -a  0 -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps -f 15:1 -F 15:1\
 	 --picSkip 0 --picRc 1   -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15  -g 15   -o $out_file -i $IN_YUV 
@@ -33,6 +33,8 @@ encode_h1v6(){
 	$H1V6 -i $IN_YUV -a 0 -b $MAX_FRAME -d -L 40 --intraQpDelta 0 --bitPerSecond  $bps   --picSkip 0 --picRc 1 --mbRc 1  -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 -o $out_file
 }
 test_h2v4(){
+	encode_h2v4    1000
+	return
 	encode_h2v4     300	
 	return
 	encode_h2v4     500
@@ -57,25 +59,14 @@ test_h2v4(){
 	encode_h2v4    8000
 	encode_h2v4   10000
 }
-test_h2v4e(){
-	encode_h2v4   12000
-	encode_h2v4   14000
-	encode_h2v4   16000
-	encode_h2v4   18000
-	encode_h2v4   20000
-	encode_h2v4   22000
-	encode_h2v4   24000
-	encode_h2v4   28000
-	encode_h2v4   32000
-	encode_h2v4   36000
-	encode_h2v4   40000
-}
+
 
 test_h1v6(){
 	echo "h1v6"
-	encode_h1v6     300
-	return
 	
+//	encode_h1v6    1000
+//	return
+	encode_h1v6     300
 	encode_h1v6     500
 	encode_h1v6     800
 	encode_h1v6    1000

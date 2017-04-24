@@ -101,10 +101,10 @@ def cal_h2_data(dir, type):  # decode , cal, all
     stream_list = os.listdir(dir)
     for item in stream_list:
 
-        if item.find("hevc") < 0:
+        if item.find("h265") < 0:
             continue
         stream_file = os.path.join("%s/%s" % (dir, item))
-        yuv_file = stream_file.replace("hevc", "yuv")
+        yuv_file = stream_file.replace("h265", "yuv")
         print("stream ->%s  yuv->%s" % (stream_file, yuv_file))
         header = ""
         if dir.find("h2v1"):
