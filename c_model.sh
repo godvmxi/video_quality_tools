@@ -1,7 +1,7 @@
 #!/bin/sh 
 H2V8=/nfs/bin/testbench_hevc_v8
 H2V1=/nfs/bin/testbench_hevc_v1
-H1V6=/nfs/bin/testbench_h1v6_264
+H1V6=/nfs/dev/socv/data/tools/venc/h264_testenc
 IN_YUV=/nfs/yuv/nv12_1080p_1000.yuv
 #IN_YUV=/nfs/yuv/nv12_1920x1088_360.yuv
 MAX_FRAME=100
@@ -10,7 +10,7 @@ encode_h2v4(){
 	kbps=$1
 	bps=`expr $kbps \* 1000`
 	fsize=`printf "%05d\n" $kbps`
-	out_file="/nfs/h2v4/${fsize}k.h265"
+	out_file="/nfs/cmodel/h2v4/${fsize}k.h265"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
 	$H2V8 -a  0 -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps  -d  \
 	--tolMovingBitRate 2 --picSkip 0 -U 1  -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15 -j 15 -g 15   --gopSize 1 --monitorFrames 15  -o $out_file -i $IN_YUV 
@@ -19,7 +19,7 @@ encode_h2v1(){
 	kbps=$1
 	bps=`expr $kbps \* 1000`
 	fsize=`printf "%05d\n" $kbps`
-	out_file="/nfs/h2v1/${fsize}k.h265"
+	out_file="/nfs/cmodel/h2v1/${fsize}k.h265"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
 	$H2V1 -a  0 -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps -f 15:1 -F 15:1\
 	 --picSkip 0 --picRc 1   -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15  -g 15   -o $out_file -i $IN_YUV 
@@ -28,7 +28,7 @@ encode_h1v6(){
 	kbps=$1
 	bps=`expr $kbps \* 1000`
 	fsize=`printf "%05d\n" $kbps`
-	out_file="/nfs/h1v6/${fsize}k.h264"
+	out_file="/nfs/cmodel/h1v6/${fsize}k.h264"
 	echo "#####################encode h1v6 -> $bps : $kbps k  -->$out_file"
 	$H1V6 -i $IN_YUV -a 0 -b $MAX_FRAME -d -L 40 --intraQpDelta 0 --bitPerSecond  $bps   --picSkip 0 --picRc 1 --mbRc 1  -w 1920 -h 1088 -x 1920 -y 1088 -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 -o $out_file
 }
@@ -63,6 +63,7 @@ test_h1v6(){
 	
 	encode_h1v6     300
 	encode_h1v6     500
+	return
 	encode_h1v6     800
 	encode_h1v6    1000
 	encode_h1v6    1500
