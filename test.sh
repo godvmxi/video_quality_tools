@@ -4,6 +4,7 @@ H2V1=/nfs/bin/testbench_hevc_v1
 H1V6=/nfs/bin/testbench_h1v6_264
 #IN_YUV=/nfs/yuv/nv12_1080p_1000.yuv
 IN_YUV=/nfs/yuv/nv12_1920x1088_360.yuv
+IN_YUV=/nfs/yuv/nv
 MAX_FRAME=100
 #18
 encode_h2v4(){
