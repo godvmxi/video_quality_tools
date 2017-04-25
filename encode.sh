@@ -7,58 +7,64 @@ DEST_DIR=
 MAX_QP=
 MIN_QP=
 BR_LIST=
+START_FRAME=0
+END_FRAME=9
+
+SH_DIR=$(cd `dirname $0`; pwd)
+echo "curent scipt dir -> $SH_DIR"
 
 read_para_from_file(){
 	#cat $1 | while read line 
 	lines=`cat $1`
 	while read line 
 	do
-		echo $line
+		#echo $line
 		t_name=`echo $line |awk -F ' ' '{print $1}'`
 		t_value=`echo $line |awk -F ' ' '{print $2}'`
-		echo "k-v :$t_name -> $t_value"
+		#echo "k-v :$t_name -> $t_value"
 		if [ $t_name = "width" ] ; then
-			echo "1 ->"$WIDTH
 			WIDTH=$t_value
-			echo "1 ->"$WIDTH
+		#	echo "1 ->"$WIDTH
 			continue
 		fi
 		if [ $t_name = "height" ] ; then
-			echo "2 ->"$HEIGHT
 			HEIGHT=$t_value
-			echo "2 ->"$HEIGHT
+			#echo "2 ->"$HEIGHT
 			continue
 		fi
 		if [ $t_name = "src_yuv" ] ; then
 			SRC_YUV=$t_value
-			echo "3 ->"$SRC_YUV
+			#echo "3 ->"$SRC_YUV
 			continue
 		fi
 		if [ $t_name = "dest_dir" ] ; then
 			DEST_DIR=$t_value
-			echo "4"
+			#echo "4"
 			continue
 		fi
 		if [ $t_name = "max_qp" ] ; then
 			MIN_QP=$t_value
-			echo "5"
+			#echo "5"
 			continue
 		fi
 		if [ $t_name = "min_qp" ] ; then
 			MAX_QP=$t_value
-			echo "6"
+			#echo "6"
 			continue
 		fi
 		if [ $t_name = "br_list" ] ; then
-			BR_LIST=$t_value
-			echo "7"
+			#BR_LIST=$t_value
+			#echo $t_value
+			BR_LIST=`echo $t_value | sed  "s/,/ /g"`
+			#echo "7"
 			continue
 		fi
 		echo "get nothing -> "$line
 	done  < $1
 }
 show_global_para(){
-	echo "show global var ->"
+	echo "##############################"
+	echo "show global var "
 	echo "WIDTH -> $WIDTH"
 	echo "HEIGHT -> $HEIGHT"
 	echo "SRC_YUV -> $SRC_YUV"
@@ -66,7 +72,51 @@ show_global_para(){
 	echo "MAX_QP -> $MAX_QP"
 	echo "MIN_QP -> $MIN_QP"
 	echo "BR_LIST -> $BR_LIST"
+	echo "##############################"
+	echo
+}
+H2V8=/nfs/bin/testbench_hevc_v8
+H2V1=/nfs/bin/testbench_hevc_v1
+H1V6=/nfs/bin/testbench_h1v6_264
+MAX_FRAME=100
+#18
+encode_h2v4(){
+	temp_dir="$DEST_DIR/h1v6"
+	mkdir -p $temp_dir
+	kbps=$1
+	bps=`expr $kbps \* 1000`
+	fsize=`printf "%05d\n" $kbps`
+	out_file="$temp_dir/${fsize}k.h265"
+	echo "#####################encode -> $bps : $kbps k  -->$out_file"
+	$H2V8 -a  $START_FRAME -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps  -d  \
+	--tolMovingBitRate 2 --picSkip 0 -U 1  -w $WIDTH -h $HEIGHT -x $WIDTH -y $HEIGHT -l 1   --intraPicRate 15 -f 15 -j 15 -g 15   --gopSize 1 --monitorFrames 15  -o $out_file -i $SRC_YUV 
+}
+encode_h2v1(){
+	temp_dir="$DEST_DIR/h1v6"
+	mkdir -p $temp_dir
+	kbps=$1
+	bps=`expr $kbps \* 1000`
+	fsize=`printf "%05d\n" $kbps`
+	out_file="$temp_dir/${fsize}k.h265"
+	echo "#####################encode -> $bps : $kbps k  -->$out_file"
+	$H2V1 -a  $START_FRAME -b $MAX_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps -f 15:1 -F 15:1\
+	 --picSkip 0 --picRc 1   -w $WIDTH -h $HEIGHT -x $WIDTH -y $HEIGHT -l 1   --intraPicRate 15 -f 15  -g 15   -o $out_file -i $SRC_YUV 
+}
+encode_h1v6(){
+	temp_dir="$DEST_DIR/h1v6"
+	mkdir -p $temp_dir
+	kbps=$1
+	bps=`expr $kbps \* 1000`
+	fsize=`printf "%05d\n" $kbps`
+	out_file="$temp_dir/${fsize}k.h264"
+	echo "#####################encode h1v6 -> $bps : $kbps k  -->$out_file"
+	$H1V6 -i $SRC_YUV -a $START_FRAME -b $MAX_FRAME -d -L 40 --intraQpDelta 0 --bitPerSecond  $bps   --picSkip 0 --picRc 1 --mbRc 1  -w $WIDTH -h $HEIGHT -x $WIDTH -y $HEIGHT -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 -o $out_file
 }
 
 read_para_from_file $1
-show_global_para
+show_global_para 
+for bitrate in `echo $BR_LIST`
+do
+	echo "XXXXXXXXXXXXXXXXXXX--->$bitrate<---XXXXXXXXXXXXXXXXXXXXX"
+	encode_$2 $bitrate
+done

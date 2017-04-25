@@ -1,0 +1,6 @@
+width 1920
+height 1080
+src_yuv /nfs/yuv/nv12_1080p_500.yuv
+dest_dir /nfs/out/sportdv
+max_qp 51
+min_qp 10
