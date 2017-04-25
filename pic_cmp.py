@@ -40,7 +40,7 @@ def decode_h265(stream, yuv):
     pass
 
 def cal_psnr_ssim(src, dst):
-    cmd = "%s 1920  1088 420 %s %s"%(PSNR, src, dst)
+    cmd = "%s %s  %s 420 %s %s"%(WIDTH,HEIGHT,PSNR, src, dst)
     #tmp = "%s 2>&1"%cmd
     print("cal cmd ->%s"%cmd)
     buf = os.popen(cmd).readlines()
@@ -85,7 +85,9 @@ def cal_h1v6_data(type):#decode , cal, all
         stream_file = os.path.join("%s/%s"%(H1V6_DIR, item))
         yuv_file=stream_file.replace("h264","yuv")
         print("stream ->%s  yuv->%s"%(stream_file, yuv_file ) )
-        header =  "%s,%s"%("h1v6",item)
+        header =  "%s,%s"%("h1v6",item.replace(".h264", ""))
+        print(header)
+        #continue
         if type == "decode" :
             decode_h264(stream_file, yuv_file)
         elif type == "cal" :
@@ -116,10 +118,13 @@ def cal_h2_data(dir, type):  # decode , cal, all
         yuv_file = stream_file.replace("h265", "yuv")
         print("stream ->%s  yuv->%s" % (stream_file, yuv_file))
         header = ""
-        if dir.find("h2v1"):
-            header = "%s,%s" % ("h2v1", item)
+        file_short=item.replace(".h265","")
+        if dir.find("h2v1") > 0:
+            header = "%s,%s" % ("h2v1", file_short)
         else:
-            header = "%s,%s" % ("h2v4", item)
+            header = "%s,%s" % ("h2v4", file_short)
+        #print("-->",dir,"###",header)
+        #continue
         if type == "decode":
             decode_h265(stream_file, yuv_file)
         elif type == "cal":
@@ -158,9 +163,9 @@ def update_global_para(para):
             continue
         if kv[0] == "dest_dir" :
             dest_dir =kv[1]
-            H1V6_DIR="%s/H1V6"%(dest_dir)
-            H2V1_DIR="%s/H2V1"%(dest_dir)
-            H2v4_DIR="%s/H2V4"%(dest_dir)
+            H1V6_DIR="%s/h1v6"%(dest_dir)
+            H2V1_DIR="%s/h2v1"%(dest_dir)
+            H2v4_DIR="%s/H2v4"%(dest_dir)
             continue
         if kv[0] == "start_frame" :
             continue
@@ -173,7 +178,7 @@ def show_global_para():
     print("WIDTH   ->",WIDTH)
     print("H1V6_DIR->",H1V6_DIR)
     print("H2V1_DIR->",H2V1_DIR)
-    print("H2v4_DIR->",H2v4_DIR)
+    print("H2v4_DIR->",H2V4_DIR)
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         help()
@@ -181,7 +186,7 @@ if __name__ == "__main__":
         print("use para file check")
         update_global_para(sys.argv[3])
     show_global_para()
-    exit(0)
+    #exit(0)
 
     if sys.argv[2] == "cal":
         print("cal psnr ssim")
