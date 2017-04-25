@@ -94,6 +94,7 @@ H1V6=/nfs/bin/testbench_h1v6_264
 encode_h2v4(){
 	temp_dir="$DEST_DIR/h2v4"
 	mkdir -p $temp_dir
+	chmod 777 -R $temp_dir
 	kbps=$1
 	bps=`expr $kbps \* 1000`
 	fsize=`printf "%05d\n" $kbps`
@@ -105,6 +106,7 @@ encode_h2v4(){
 encode_h2v1(){
 	temp_dir="$DEST_DIR/h2v1"
 	mkdir -p $temp_dir
+	chmod 777 -R $temp_dir
 	kbps=$1
 	bps=`expr $kbps \* 1000`
 	fsize=`printf "%05d\n" $kbps`
@@ -116,6 +118,7 @@ encode_h2v1(){
 encode_h1v6(){
 	temp_dir="$DEST_DIR/h1v6"
 	mkdir -p $temp_dir
+	chmod 777 -R $temp_dir
 	kbps=$1
 	bps=`expr $kbps \* 1000`
 	fsize=`printf "%05d\n" $kbps`
