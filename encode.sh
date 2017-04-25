@@ -42,12 +42,12 @@ read_para_from_file(){
 			#echo "4"
 			continue
 		fi
-		if [ $t_name = "max_qp" ] ; then
+		if [ $t_name = "min_qp" ] ; then
 			MIN_QP=$t_value
 			#echo "5"
 			continue
 		fi
-		if [ $t_name = "min_qp" ] ; then
+		if [ $t_name = "max_qp" ] ; then
 			MAX_QP=$t_value
 			#echo "6"
 			continue
@@ -99,7 +99,7 @@ encode_h2v4(){
 	fsize=`printf "%05d\n" $kbps`
 	out_file="$temp_dir/${fsize}k.h265"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
-	$H2V8 -a  $START_FRAME -b $END_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps  -d  \
+	$H2V8 -a  $START_FRAME -b $END_FRAME -L 180  -n $MIN_QP -m $MAX_QP --intraQpDelta 0 --bitPerSecond  $bps  -d  \
 	--tolMovingBitRate 2 --picSkip 0 -U 1  -w $WIDTH -h $HEIGHT -x $WIDTH -y $HEIGHT -l 1   --intraPicRate 15 -f 15 -j 15 -g 15   --gopSize 1 --monitorFrames 15  -o $out_file -i $SRC_YUV 
 }
 encode_h2v1(){
@@ -110,7 +110,7 @@ encode_h2v1(){
 	fsize=`printf "%05d\n" $kbps`
 	out_file="$temp_dir/${fsize}k.h265"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
-	$H2V1 -a  $START_FRAME -b $END_FRAME -L 180 --intraQpDelta 0 --bitPerSecond  $bps -f 15:1 -F 15:1\
+	$H2V1 -a  $START_FRAME -b $END_FRAME  -n $MIN_QP -m $MAX_QP -L 180 --intraQpDelta 0 --bitPerSecond  $bps -f 15:1 -F 15:1\
 	 --picSkip 0 --picRc 1   -w $WIDTH -h $HEIGHT -x $WIDTH -y $HEIGHT -l 1   --intraPicRate 15 -f 15  -g 15   -o $out_file -i $SRC_YUV 
 }
 encode_h1v6(){
@@ -121,7 +121,7 @@ encode_h1v6(){
 	fsize=`printf "%05d\n" $kbps`
 	out_file="$temp_dir/${fsize}k.h264"
 	echo "#####################encode h1v6 -> $bps : $kbps k  -->$out_file"
-	$H1V6 -i $SRC_YUV -a $START_FRAME -b $END_FRAME -d -L 40 --intraQpDelta 0 --bitPerSecond  $bps   --picSkip 0 --picRc 1 --mbRc 1  -w $WIDTH -h $HEIGHT -x $WIDTH -y $HEIGHT -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 -o $out_file
+	$H1V6 -i $SRC_YUV -a $START_FRAME -b $END_FRAME -n $MIN_QP -m $MAX_QP -d -L 40 --intraQpDelta 0 --bitPerSecond  $bps   --picSkip 0 --picRc 1 --mbRc 1  -w $WIDTH -h $HEIGHT -x $WIDTH -y $HEIGHT -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 -o $out_file
 }
 
 read_para_from_file $1
