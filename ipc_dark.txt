@@ -1,6 +1,11 @@
 width 1920
 height 1080
-src_yuv /nfs/yuv/nv12_1080p_500.yuv
-dest_dir /nfs/out/sportdv
+src_yuv /nfs/yuv/ipc_night_move_nv12_1920x1080_200.yuv
+dest_dir /nfs/out/ipc_night
 max_qp 51
 min_qp 10
+start_frame 0
+end_frame 100
+fps 15
+intra_interval 15
+br_list 300,500,800,1000,1500,2000,2500,3000,4000,5000,6000,7000,8000,9000,10000

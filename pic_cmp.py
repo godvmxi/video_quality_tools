@@ -40,7 +40,7 @@ def decode_h265(stream, yuv):
     pass
 
 def cal_psnr_ssim(src, dst):
-    cmd = "%s %s  %s 420 %s %s"%(WIDTH,HEIGHT,PSNR, src, dst)
+    cmd = "%s %s  %s 420 %s %s"%(PSNR, WIDTH,HEIGHT,src, dst)
     #tmp = "%s 2>&1"%cmd
     print("cal cmd ->%s"%cmd)
     buf = os.popen(cmd).readlines()
