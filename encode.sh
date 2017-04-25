@@ -81,7 +81,7 @@ H1V6=/nfs/bin/testbench_h1v6_264
 MAX_FRAME=100
 #18
 encode_h2v4(){
-	temp_dir="$DEST_DIR/h1v6"
+	temp_dir="$DEST_DIR/h2v4"
 	mkdir -p $temp_dir
 	kbps=$1
 	bps=`expr $kbps \* 1000`
@@ -92,7 +92,7 @@ encode_h2v4(){
 	--tolMovingBitRate 2 --picSkip 0 -U 1  -w $WIDTH -h $HEIGHT -x $WIDTH -y $HEIGHT -l 1   --intraPicRate 15 -f 15 -j 15 -g 15   --gopSize 1 --monitorFrames 15  -o $out_file -i $SRC_YUV 
 }
 encode_h2v1(){
-	temp_dir="$DEST_DIR/h1v6"
+	temp_dir="$DEST_DIR/h2v1"
 	mkdir -p $temp_dir
 	kbps=$1
 	bps=`expr $kbps \* 1000`
