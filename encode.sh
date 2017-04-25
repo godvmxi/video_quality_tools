@@ -6,6 +6,7 @@ SRC_YUV=
 DEST_DIR=
 MAX_QP=
 MIN_QP=
+BR_LIST=
 
 read_para_from_file(){
 	#cat $1 | while read line 
@@ -48,6 +49,11 @@ read_para_from_file(){
 			echo "6"
 			continue
 		fi
+		if [ $t_name = "br_list" ] ; then
+			BR_LIST=$t_value
+			echo "7"
+			continue
+		fi
 		echo "get nothing -> "$line
 	done  < $1
 }
@@ -59,6 +65,7 @@ show_global_para(){
 	echo "DEST_DIR -> $DEST_DIR"
 	echo "MAX_QP -> $MAX_QP"
 	echo "MIN_QP -> $MIN_QP"
+	echo "BR_LIST -> $BR_LIST"
 }
 
 read_para_from_file $1
