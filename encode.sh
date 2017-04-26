@@ -115,13 +115,13 @@ encode_h2v4(){
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
 	if [ $PC_MODE -eq 1 ] ;then 
 		echo "PC  MODE"
-		APP=$H1V6_C_MODEL
+		APP=$H2V4_C_MODEL
 	else
 		echo "EVB MODE"
-		APP=$H1V6
+		APP=$H2V4
 	fi
 	echo "APP->  $APP"
-	return
+	
 	$APP -a  $START_FRAME -b $END_FRAME -L 180  -n $MIN_QP -m $MAX_QP --intraQpDelta 0 --bitPerSecond  $bps  -d  \
 	--tolMovingBitRate 2 --picSkip 0 -U 1  -w $WIDTH -h $HEIGHT -x $WIDTH -y $HEIGHT -l 1   --intraPicRate 15 -f 15 -j 15 -g 15   --gopSize 1 --monitorFrames 15  -o $out_file -i $SRC_YUV 
 }
@@ -134,7 +134,15 @@ encode_h2v1(){
 	fsize=`printf "%05d\n" $kbps`
 	out_file="$temp_dir/${fsize}k.h265"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
-	$H2V1 -a  $START_FRAME -b $END_FRAME  -n $MIN_QP -m $MAX_QP -L 180 --intraQpDelta 0 --bitPerSecond  $bps -f 15:1 -F 15:1\
+	if [ $PC_MODE -eq 1 ] ;then 
+		echo "PC  MODE"
+		APP=$H2V1_C_MODEL
+	else
+		echo "EVB MODE"
+		APP=$H2V1
+	fi
+	echo "APP->  $APP"
+	$APP -a  $START_FRAME -b $END_FRAME  -n $MIN_QP -m $MAX_QP -L 180 --intraQpDelta 0 --bitPerSecond  $bps -f 15:1 -F 15:1\
 	 --picSkip 0 --picRc 1   -w $WIDTH -h $HEIGHT -x $WIDTH -y $HEIGHT -l 1   --intraPicRate 15 -f 15  -g 15   -o $out_file -i $SRC_YUV 
 }
 encode_h1v6(){
