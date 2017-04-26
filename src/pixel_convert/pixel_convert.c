@@ -50,6 +50,7 @@ int convert_x_in_equal_out(FILE *in, FILE *out, int in_w, int in_h, int out_w, i
 	size_t result;
 	size_t y_size = out_w * out_h;
 	size_t uv_size = y_size / 2;
+	printf("origin info ->%d %d\n", in_w * in_h, in_w * in_h / 2);
 	if(in_h >= out_h){
 		y_size = out_w  * out_h;
 		uv_size = y_size / 2;
@@ -58,23 +59,23 @@ int convert_x_in_equal_out(FILE *in, FILE *out, int in_w, int in_h, int out_w, i
 		printf("copy info -> %ld  %ld %ld %ld\n", y_size, uv_size, y_seek, uv_seek);
 		for(int i = 0; i < num; i++){
 			//copy y
-			result = fread(buf, y_size, 1, in);
+			result = fread(buf, 1, y_size, in);
 			if( y_size != result){
 				printf("read size error ->%ld %ld\n", y_size, result);
 				goto error_2;
 			}
-			result = fwrite(buf, y_size, 1, out);
+			result = fwrite(buf, 1, y_size, out);
 			if(result != y_size){
 				printf("write file error ->%ld %ld\n", y_size, result);
 				goto error_2;
 			}
 			fseek(in, y_seek, SEEK_CUR);
-			result = fread(buf, uv_size, 1, in);
+			result = fread(buf, 1, uv_size, in);
 			if( uv_size != result){
 				printf("read size error ->%ld %ld\n", uv_size, result);
 				goto error_2;
 			}
-			result = fwrite(buf, uv_size, 1, out);
+			result = fwrite(buf, 1, uv_size, out);
 			if(result != uv_size){
 				printf("write file error ->%ld %ld\n", uv_size, result);
 				goto error_2;
