@@ -40,6 +40,9 @@ int convert_x_out_larger_in(FILE *in, FILE *out, int in_w, int in_h, int out_w, 
 }
 int convert_x_in_equal_out(FILE *in, FILE *out, int in_w, int in_h, int out_w, int out_h, int num){
 	printf("%d %s\n",__LINE__, __func__);
+	if(in_h >= out_h){
+
+	}
 
 	return 0;
 }
@@ -68,9 +71,12 @@ int main(int argc, char** argv){
 		printf("out res max can be divided by 2\n");
 		return 0;
 	}
+	if(in_w % 2 != 0 || in_h %2 != 0){
+		printf("in res max can be divided by 2\n");
+		return 0;
+	}
 	int y_size = out_w * out_h;
 	int uv_size = y_size / 2;
-	char temp_buf[BUFFER_SIZE];
 	FILE *in_fd = fopen(in_file, "r");
 	if(in_fd == NULL ){
 		printf("open in file error ->%s\n", in_file);
@@ -107,8 +113,8 @@ int main(int argc, char** argv){
 	}
 
 
-
 	fclose(in_fd);
+	fflush(out_fd);
 	fclose(out_fd);
 	return 0;
 }
