@@ -43,16 +43,17 @@ int main(int argc, char** argv){
 	char out_file[128];
 	sprintf(out_file, "%s_%d_%d.yuv", in_file, out_w, out_h);
 	printf("out  file ->%s\n", out_file);
-	int frame_num = 0;
+	int out_frame_num = 0;
 	if(argc == 7){
-		frame_num = atoi(argv[6]);
-		printf("frame num ->%d\n", frame_num);
+		out_frame_num = atoi(argv[6]);
+		printf("frame num ->%d\n", out_frame_num);
 	}
 	if(out_w % 2 != 0 || out_h %2 != 0){
 		printf("out res max can be divided by 2\n");
 		return 0;
 	}
 	int y_size = out_w * out_h;
+	int uv_size = y_size / 2;
 	char temp_buf[BUFFER_SIZE];
 	FILE *in_fd = fopen(in_file, "r");
 	if(in_fd == NULL ){
@@ -69,6 +70,16 @@ int main(int argc, char** argv){
 	in_file_size = ftell(in_fd);
 	rewind(in_fd);
 	printf("input file size ->%8ld\n", in_file_size);
+	int in_file_frame_num = in_file_size / (in_w * in_h * 3 / 2);
+	printf("in  file frame num ->%d\n", in_file_frame_num);
+	if(out_frame_num == 0 ){
+		out_frame_num = in_file_frame_num;
+	}
+	if(in_file_frame_num < out_frame_num ){
+		out_frame_num = in_file_frame_num;
+	}
+	printf("out file frame num ->%d\n", out_frame_num);
+
 
 
 	fclose(in_fd);
