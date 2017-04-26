@@ -5,7 +5,7 @@ dest_dir /nfs/out/ipc_night
 max_qp 51
 min_qp 10
 start_frame 0
-end_frame 100
+end_frame 10
 fps 15
 intra_interval 15
 pc_mode 0
