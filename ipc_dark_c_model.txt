@@ -1,12 +1,12 @@
 width 1920
 height 1080
 src_yuv /nfs/yuv/ipc_night_move_nv12_1920x1080_200.yuv
-dest_dir /nfs/out/ipc_night
+dest_dir /nfs/out/ipc_night_c_model
 max_qp 51
 min_qp 10
 start_frame 0
-end_frame 100
+end_frame 10
 fps 15
 intra_interval 15
-pc_mode 0
-br_list 300,500,800,1000,1500,2000,2500,3000,4000,5000,6000,7000,8000,9000,10000
+pc_mode 1
+br_list 500,800,1000

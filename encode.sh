@@ -9,9 +9,18 @@ MIN_QP=
 BR_LIST=
 START_FRAME=0
 END_FRAME=9
+PC_MODE=0
 
 SH_DIR=$(cd `dirname $0`; pwd)
 echo "curent scipt dir -> $SH_DIR"
+#evb testbench
+H2V4=/nfs/bin/testbench_hevc_v8
+H2V1=/nfs/bin/testbench_hevc_v1
+H1V6=/nfs/bin/testbench_h1v6_264
+
+H1V6_C_MODEL=$SH_DIR/c_model/h264_testenc_v6
+H2V1_C_MODEL=$SH_DIR/c_model/
+H2V4_C_MODEL=$SH_DIR/c_model/hevc_testenc_v4
 
 read_para_from_file(){
 	#cat $1 | while read line 
@@ -62,14 +71,19 @@ read_para_from_file(){
 			#echo "6"
 			continue
 		fi
+		if [ $t_name = "pc_mode" ] ; then
+			PC_MODE=$t_value
+			#echo "6"
+			continue
+		fi
 		if [ $t_name = "br_list" ] ; then
 			#BR_LIST=$t_value
-			#echo $t_value
+			echo $t_value
 			BR_LIST=`echo $t_value | sed  "s/,/ /g"`
 			#echo "7"
 			continue
 		fi
-		echo "get nothing -> "$line
+		echo "#####not handle para -> "$line"  ,will add later"
 	done  < $1
 }
 show_global_para(){
@@ -83,24 +97,32 @@ show_global_para(){
 	echo "MIN_QP -> $MIN_QP"
 	echo "START_FRAME -> $START_FRAME"
 	echo "END_FRAME -> $END_FRAME"
+	echo "PC_MODE -> $PC_MODE"
 	echo "BR_LIST -> $BR_LIST"
 	echo "##############################"
 	echo
 }
-H2V8=/nfs/bin/testbench_hevc_v8
-H2V1=/nfs/bin/testbench_hevc_v1
-H1V6=/nfs/bin/testbench_h1v6_264
+
 #18
 encode_h2v4(){
 	temp_dir="$DEST_DIR/h2v4"
 	mkdir -p $temp_dir
-	chmod 777 -R $temp_dir
+	chmod 777 -R $temp_dir    > /dev/null 2>&1
 	kbps=$1
 	bps=`expr $kbps \* 1000`
 	fsize=`printf "%05d\n" $kbps`
 	out_file="$temp_dir/${fsize}k.h265"
 	echo "#####################encode -> $bps : $kbps k  -->$out_file"
-	$H2V8 -a  $START_FRAME -b $END_FRAME -L 180  -n $MIN_QP -m $MAX_QP --intraQpDelta 0 --bitPerSecond  $bps  -d  \
+	if [ $PC_MODE -eq 1 ] ;then 
+		echo "PC  MODE"
+		APP=$H1V6_C_MODEL
+	else
+		echo "EVB MODE"
+		APP=$H1V6
+	fi
+	echo "APP->  $APP"
+	return
+	$APP -a  $START_FRAME -b $END_FRAME -L 180  -n $MIN_QP -m $MAX_QP --intraQpDelta 0 --bitPerSecond  $bps  -d  \
 	--tolMovingBitRate 2 --picSkip 0 -U 1  -w $WIDTH -h $HEIGHT -x $WIDTH -y $HEIGHT -l 1   --intraPicRate 15 -f 15 -j 15 -g 15   --gopSize 1 --monitorFrames 15  -o $out_file -i $SRC_YUV 
 }
 encode_h2v1(){
@@ -123,8 +145,18 @@ encode_h1v6(){
 	bps=`expr $kbps \* 1000`
 	fsize=`printf "%05d\n" $kbps`
 	out_file="$temp_dir/${fsize}k.h264"
+
 	echo "#####################encode h1v6 -> $bps : $kbps k  -->$out_file"
-	$H1V6 -i $SRC_YUV -a $START_FRAME -b $END_FRAME -n $MIN_QP -m $MAX_QP -d -L 40 --intraQpDelta 0 --bitPerSecond  $bps   --picSkip 0 --picRc 1 --mbRc 1  -w $WIDTH -h $HEIGHT -x $WIDTH -y $HEIGHT -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 -o $out_file
+	if [ $PC_MODE -eq 1 ] ;then 
+		echo "PC  MODE"
+		APP=$H1V6_C_MODEL
+	else
+		echo "EVB MODE"
+		APP=$H1V6
+	fi
+	echo "APP->  $APP"
+
+	$APP -i $SRC_YUV -a $START_FRAME -b $END_FRAME -n $MIN_QP -m $MAX_QP -d -L 40 --intraQpDelta 0 --bitPerSecond  $bps   --picSkip 0 --picRc 1 --mbRc 1  -w $WIDTH -h $HEIGHT -x $WIDTH -y $HEIGHT -l 1   --intraPicRate 15 -f 15 -j 15 -g 15  -C 1 -o $out_file
 }
 
 read_para_from_file $1
