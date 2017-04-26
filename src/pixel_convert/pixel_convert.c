@@ -27,6 +27,22 @@ void help(char *app){
 	printf("\t %s in_w in_h out_w out_y in_file:\n", app);
 }
 #define BUFFER_SIZE  1024000
+
+int convert_x_in_larger_out(FILE *in, FILE *out, int in_w, int in_h, int out_w, int out_h, int num){
+	printf("%d %s\n",__LINE__, __func__);
+
+	return 0;
+}
+int convert_x_out_larger_in(FILE *in, FILE *out, int in_w, int in_h, int out_w, int out_h, int num){
+	printf("%d %s\n",__LINE__, __func__);
+
+	return 0;
+}
+int convert_x_in_equal_out(FILE *in, FILE *out, int in_w, int in_h, int out_w, int out_h, int num){
+	printf("%d %s\n",__LINE__, __func__);
+
+	return 0;
+}
 int main(int argc, char** argv){
 	if(argc < 5){
 		help(argv[0]);
@@ -79,6 +95,16 @@ int main(int argc, char** argv){
 		out_frame_num = in_file_frame_num;
 	}
 	printf("out file frame num ->%d\n", out_frame_num);
+
+	if(in_w = out_w){
+		convert_x_in_equal_out(in_fd, out_fd, in_w, in_h, out_w, out_h, out_frame_num);
+	}
+	else if(in_w < out_w){
+		convert_x_out_larger_in(in_fd, out_fd, in_w, in_h, out_w, out_h, out_frame_num);
+	}
+	else{
+		convert_x_in_larger_out(in_fd, out_fd, in_w, in_h, out_w, out_h, out_frame_num);
+	}
 
 
 
