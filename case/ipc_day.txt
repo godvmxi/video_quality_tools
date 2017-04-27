@@ -1,0 +1,12 @@
+width 1920
+height 1088
+src_yuv /nfs/yuv/nv12_1920x1088_360.yuv
+dest_dir /nfs/out/ipc_day
+max_qp 51
+min_qp 10
+start_frame 0
+end_frame 100
+fps 15
+intra_interval 15
+pc_mode 0
+br_list 300,500,800,1000
